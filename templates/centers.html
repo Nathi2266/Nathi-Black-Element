@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Collection Centers{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="dashboard-header mb-4">
+        <i class="fas fa-map-marked-alt me-2"></i>Waste Collection Centers
+    </h1>
+    
+    <div class="row">
+        {% for province in provinces %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white"> <!-- Color updated via base -->
+                    <h5 class="mb-0">
+                        <i class="fas fa-map-marker-alt me-2"></i>{{ province }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for center in centers if center.province == province %}
+                        <li class="list-group-item">
+                            <h6 class="fw-bold">{{ center.name }}</h6>
+                            <p class="mb-1">
+                                <i class="fas fa-location-dot me-2"></i>{{ center.location }}
+                            </p>
+                            <p class="mb-1">
+                                <i class="fas fa-phone me-2"></i>{{ center.contact }}
+                            </p>
+                            <p class="mb-1">
+                                <i class="fas fa-clock me-2"></i>{{ center.operating_hours }}
+                            </p>
+                            <p class="mb-0">
+                                <i class="fas fa-weight-hanging me-2"></i>Capacity: {{ center.capacity }}kg
+                            </p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

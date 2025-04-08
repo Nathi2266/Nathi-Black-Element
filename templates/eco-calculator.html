@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Eco Calculator{% endblock %}
+
+{% block extra_css %}
+<style>
+    .impact-card {
+        border-left: 4px solid var(--primary-color);
+        transition: all 0.3s ease;
+    }
+    .impact-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .eco-icon {
+        font-size: 2rem;
+        color: var(--primary-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-success text-white">
+                    <h3><i class="fas fa-calculator me-2"></i>Environmental Impact Calculator</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Personal Impact -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-user me-2"></i>Your Recycling Impact</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="text-center mb-4">
+                                        <i class="fas fa-recycle eco-icon mb-3"></i>
+                                        <h4 class="text-success">{{ "%.1f"|format(total_stats.kg) }} kg</h4>
+                                        <p class="text-muted">Total Waste Recycled</p>
+                                    </div>
+                                    
+                                    <div class="list-group">
+                                        <div class="list-group-item impact-card">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-cloud me-2"></i>
+                                                    <strong>CO₂ Saved</strong>
+                                                </div>
+                                                <span class="badge bg-success">
+                                                    {{ "%.1f"|format(total_stats.co2) }} kg
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item impact-card">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-tree me-2"></i>
+                                                    <strong>Trees Saved</strong>
+                                                </div>
+                                                <span class="badge bg-success">
+                                                    {{ "%.0f"|format(total_stats.trees) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item impact-card">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <i class="fas fa-bolt me-2"></i>
+                                                    <strong>Energy Saved</strong>
+                                                </div>
+                                                <span class="badge bg-success">
+                                                    {{ "%.0f"|format(total_stats.energy) }} kWh
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Calculator -->
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-calculator me-2"></i>Calculate Impact</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST">
+                                        <div class="mb-4">
+                                            <label class="form-label fw-bold">
+                                                <i class="fas fa-weight-hanging me-2"></i>
+                                                Enter Waste Amount (kg)
+                                            </label>
+                                            <div class="input-group input-group-lg">
+                                                <input type="number" 
+                                                       class="form-control" 
+                                                       name="amount" 
+                                                       step="0.1" 
+                                                       min="0.1" 
+                                                       required>
+                                                <span class="input-group-text">kg</span>
+                                            </div>
+                                            <div class="form-text">
+                                                Enter any amount to see its environmental impact
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-success btn-lg w-100">
+                                            <i class="fas fa-calculator me-2"></i>Calculate Impact
+                                        </button>
+                                    </form>
+
+                                    {% if hypothetical %}
+                                    <div class="mt-4">
+                                        <h5 class="text-center text-success">
+                                            <i class="fas fa-chart-line me-2"></i>
+                                            Potential Impact
+                                        </h5>
+                                        <div class="row text-center mt-3">
+                                            <div class="col-4">
+                                                <div class="p-3 bg-light rounded">
+                                                    <h6 class="text-success">{{ "%.1f"|format(hypothetical.co2) }}</h6>
+                                                    <small class="text-muted">kg CO₂</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="p-3 bg-light rounded">
+                                                    <h6 class="text-success">{{ "%.0f"|format(hypothetical.trees) }}</h6>
+                                                    <small class="text-muted">Trees</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-4">
+                                                <div class="p-3 bg-light rounded">
+                                                    <h6 class="text-success">{{ "%.0f"|format(hypothetical.energy) }}</h6>
+                                                    <small class="text-muted">kWh</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-info mt-3">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            Recycling {{ "%.1f"|format(hypothetical.kg) }}kg could save these resources!
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

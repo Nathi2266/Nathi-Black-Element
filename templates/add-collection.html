@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Add Collection{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Eco Calculator color update */
+    .impact-card {
+        border-left: 4px solid #2E7D32; /* Updated color */
+    }
+    /* Add Collection form styles */
+    .collection-form {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .datetime-preview {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+    /* ... rest of eco-calculator styles can be added here if needed ... */
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="collection-form">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">
+                    <i class="fas fa-trash-alt me-2"></i>Schedule New Collection
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" novalidate>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="centerSelect" class="form-label fw-bold">
+                                <i class="fas fa-map-marker-alt me-2"></i>Collection Center
+                            </label>
+                            <select class="form-select" id="centerSelect" name="center_id" required>
+                                <option value="" selected disabled>-- Select Center --</option>
+                                {% for center in centers %}
+                                <option value="{{ center.id }}">
+                                    {{ center.name }} ({{ center.province }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">
+                                Choose from our network of centers across South Africa
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="amountInput" class="form-label fw-bold">
+                                <i class="fas fa-weight-hanging me-2"></i>Waste Amount (kg)
+                            </label>
+                            <div class="input-group">
+                                <input type="number" 
+                                       class="form-control" 
+                                       id="amountInput" 
+                                       name="amount" 
+                                       step="0.1" 
+                                       min="0.1" 
+                                       max="1000" 
+                                       placeholder="e.g. 5.5" 
+                                       required>
+                                <span class="input-group-text">kg</span>
+                            </div>
+                            <div class="form-text">
+                                Minimum 0.1kg, maximum 1000kg per collection
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="collectionDate" class="form-label fw-bold">
+                            <i class="fas fa-calendar-alt me-2"></i>Collection Date & Time
+                        </label>
+                        <input type="datetime-local" 
+                               class="form-control" 
+                               id="collectionDate" 
+                               name="collection_date" 
+                               min="{{ min_date }}" 
+                               required>
+                        <div class="form-text datetime-preview mt-1" id="datePreview">
+                            Selected date will appear here
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-3 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-calendar-check me-2"></i>Schedule Collection
+                        </button>
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Update date preview in real-time
+    document.getElementById('collectionDate').addEventListener('change', function() {
+        const datePreview = document.getElementById('datePreview');
+        if (this.value) {
+            const date = new Date(this.value);
+            datePreview.textContent = 'Scheduled for: ' + date.toLocaleString('en-ZA', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } else {
+            datePreview.textContent = 'Selected date will appear here';
+        }
+    });
+</script>
+{% endblock %}
